@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>PokeCasino Ad Break</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+
+body{
+background:#0f172a;
+font-family:Arial;
+color:white;
+text-align:center;
+padding-top:40px;
+}
+
+.card{
+background:#1e293b;
+width:340px;
+margin:auto;
+padding:30px;
+border-radius:15px;
+box-shadow:0 0 20px rgba(0,0,0,0.4);
+}
+
+h2{
+margin-bottom:10px;
+}
+
+button{
+margin-top:20px;
+padding:12px 25px;
+border:none;
+border-radius:8px;
+background:#22c55e;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:disabled{
+background:#444;
+cursor:not-allowed;
+}
+
+.timer{
+margin-top:15px;
+font-size:14px;
+opacity:0.8;
+}
+
+.warning{
+color:#f87171;
+margin-top:10px;
+font-size:13px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>🎰 PokeCasino</h2>
+
+<p>Watch the ad to continue playing Mines.</p>
+
+<!-- Adsterra Ad Script -->
+<script src="https://pl28900148.effectivegatecpm.com/41/8a/1c/418a1cbe0a10d5610d4f2f8faa05560b.js"></script>
+
+<div class="timer">
+Ad ends in <span id="time">12</span> seconds
+</div>
+
+<button id="claimBtn" disabled onclick="claimReward()">
+Claim 1000 PD
+</button>
+
+<div class="warning">
+Do not close this page until timer ends
+</div>
+
+</div>
+
+<script>
+
+Telegram.WebApp.expand()
+
+let seconds = 12
+let btn = document.getElementById("claimBtn")
+let timer = document.getElementById("time")
+
+let startTime = Date.now()
+
+// Block refresh exploit
+if(localStorage.getItem("ad_running")){
+document.body.innerHTML="<h3 style='color:white;text-align:center'>Ad already running</h3>"
+}
+
+localStorage.setItem("ad_running","1")
+
+let interval = setInterval(function(){
+
+seconds--
+
+timer.innerText = seconds
+
+if(seconds <= 0){
+
+clearInterval(interval)
+btn.disabled = false
+timer.innerText = "Ad completed"
+
+}
+
+},1000)
+
+function claimReward(){
+
+let watchTime = Date.now() - startTime
+
+if(watchTime < 11000){
+
+alert("Please watch the full ad")
+
+return
+
+}
+
+localStorage.removeItem("ad_running")
+
+Telegram.WebApp.sendData(JSON.stringify({
+type:"ad_complete",
+time:watchTime
+}))
+
+Telegram.WebApp.close()
+
+}
+
+// Detect tab switching
+document.addEventListener("visibilitychange",function(){
+
+if(document.hidden){
+
+btn.disabled=true
+
+}
+
+})
+
+</script>
+
+</body>
+</html>
