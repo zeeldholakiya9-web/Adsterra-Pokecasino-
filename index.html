@@ -97,9 +97,8 @@
         .pkmn-img { 
             width: 140px; 
             height: 140px; 
-            image-rendering: auto; 
+            image-rendering: pixelated; 
             object-fit: contain;
-            animation: idleFloat 1.6s ease-in-out infinite;
         }
         
         .status-bar {
@@ -198,12 +197,6 @@
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-8px); }
             40%, 80% { transform: translateX(8px); }
-        }
-
-        @keyframes idleFloat {
-            0% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-8px) scale(1.02); }
-            100% { transform: translateY(0px) scale(1); }
         }
     </style>
 </head>
@@ -310,8 +303,10 @@
                 maxHp: hp, hp: hp,
                 atk: data.stats[1].base_stat, def: data.stats[2].base_stat, spd: data.stats[5].base_stat,
                 types: data.types.map(t => t.type.name),
-                // Use HD Official Artwork for both
-                img: data.sprites.other['official-artwork'].front_default,
+                // Use Back sprites for player, Front for AI
+                img: isPlayer 
+                  ? `https://play.pokemonshowdown.com/sprites/ani-back/${data.name}.gif`
+                  : `https://play.pokemonshowdown.com/sprites/ani/${data.name}.gif`,
                 moves: [
                     { name: 'Tackle', power: 40, type: 'normal' },
                     { name: 'Swift', power: 60, type: 'normal' },
@@ -395,7 +390,7 @@
         
         const imgId = targetId === 'opponent-active' ? 'opp-img' : 'player-img';
         document.getElementById(imgId).style.animation = 'shake 0.2s 2';
-        setTimeout(() => document.getElementById(imgId).style.animation = 'idleFloat 1.6s ease-in-out infinite', 400);
+        setTimeout(() => document.getElementById(imgId).style.animation = '', 400);
         
         updateUI();
         await sleep(600);
